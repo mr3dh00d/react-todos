@@ -1,11 +1,10 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { createTodo } from "../services/todos"
 
 
 const CrearTarea = ({
     fetchTodos
 }) => {
-    const form = useRef(null)
     const [titulo, setTitulo] = useState('')
     const [autor, setAutor] = useState('')
     const [loading, setLoading] = useState(false)
@@ -14,7 +13,6 @@ const CrearTarea = ({
     const handleAutor = e => setAutor(e.target.value)
 
     const handleSubmit = (e) => {
-        e.preventDefault()
         setLoading(true)
         createTodo({
             titulo,
@@ -22,15 +20,14 @@ const CrearTarea = ({
         }).then(response => {
             setTitulo('')
             setAutor('')
-        })
-    .finally(() => setLoading(false), fetchTodos())
+        }).finally(() => fetchTodos(), setLoading(false))
     }
 
     return (
         <>
             <div className="bg-gray-100 shadow-md px-2 py-5 rounded-md">
                 <h2 className="text-black font-bold text-2xl">Crear tarea</h2>
-                <form onSubmit={handleSubmit} ref={form}>
+                <div>
                     <input
                         type="text"
                         placeholder="Título"
@@ -49,14 +46,18 @@ const CrearTarea = ({
                     />
                     <div className="flex justify-end">
                         <button
-                            className="bg-green-600 hover:bg-green-700 px-3 py-2 text-white rounded-lg"
-                            type="submit"
+                            className={
+                                loading
+                                    ? "bg-gray-400 px-3 py-2 text-white rounded-lg"
+                                    : "bg-green-600 hover:bg-green-700 px-3 py-2 text-white rounded-lg"
+                            }
                             disabled={loading}
+                            onClick={handleSubmit}
                         >
                             Crear tarea
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </>
     )

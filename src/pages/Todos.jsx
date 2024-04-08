@@ -14,6 +14,7 @@ const Todos = () => {
     useEffect(() => {
         fetchTodos()
     }, [])
+    
     const fetchTodos = () => {
         setTodos(null)
         getTodos().then(response => {
